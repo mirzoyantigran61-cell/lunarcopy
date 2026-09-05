@@ -619,7 +619,7 @@ AES_IV = b'fedcba9876543210'  # 16 байт, смени!
 
 @app.route('/api/get_lib', methods=['GET'])
 def get_lib():
-    lib_path = 'liblunar.so'
+    lib_path = 'libPrabirxLive.so'
     try:
         with open(lib_path, 'rb') as f:
             data = f.read()
