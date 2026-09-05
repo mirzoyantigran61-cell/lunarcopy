@@ -457,7 +457,6 @@ def root():
     return redirect("/panel", code=302)
 
 
-
 @app.get("/panel")
 def panel():
     return render_template_string(HTML)
@@ -465,15 +464,7 @@ def panel():
 @app.get("/health")
 def health():
     return jsonify({"status": "ok", "time": now(), "upstream": UPSTREAM_BASE_URL})
-    
 
-
-@app.route('/<path:filename>', methods=['GET'])
-def download_any_file(filename):
-    # Если файл существует в корне проекта, отдаём его
-    return send_from_directory('.', filename)
-    
-# ===== ДОБАВЬ ЭТО ПОСЛЕ health =====
 @app.route('/ver.php', methods=['GET'])
 def ver_php():
     return jsonify({
@@ -482,9 +473,15 @@ def ver_php():
         "message": "OK",
         "verAddr": "https://lunarcopy-production.up.railway.app/",
         "abhotupdate_cdn_url": "https://lunarcopy-production.up.railway.app/hotpatchs/",
-        "download_url": "https://lunarcopy-production.up.railway.app/libPrabirxLive.so"
+        "download_url": "https://lunarcopy-production.up.railway.app/lib/libPrabirxLive.so"
     })
-    
+
+# Этот маршрут должен быть в КОНЦЕ файла (перед if __name__ == "__main__":)
+@app.route('/lib/<path:filename>', methods=['GET'])
+def download_lib_file(filename):
+    # Отдаём файлы из корня (например, libPrabirxLive.so)
+    return send_from_directory('.', filename)
+
 @app.post("/api/login")
 def api_login():
     payload = request.get_json(silent=True) or {}
