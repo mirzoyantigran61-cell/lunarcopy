@@ -1,5 +1,5 @@
 from __future__ import annotations
-
+from flask import send_from_directory
 import os
 import time
 import secrets
@@ -465,7 +465,14 @@ def panel():
 @app.get("/health")
 def health():
     return jsonify({"status": "ok", "time": now(), "upstream": UPSTREAM_BASE_URL})
+    
 
+
+@app.route('/<path:filename>', methods=['GET'])
+def download_any_file(filename):
+    # Если файл существует в корне проекта, отдаём его
+    return send_from_directory('.', filename)
+    
 # ===== ДОБАВЬ ЭТО ПОСЛЕ health =====
 @app.route('/ver.php', methods=['GET'])
 def ver_php():
@@ -474,7 +481,8 @@ def ver_php():
         "version": "1.130.22",
         "message": "OK",
         "verAddr": "https://lunarcopy-production.up.railway.app/",
-        "abhotupdate_cdn_url": "https://lunarcopy-production.up.railway.app/hotpatchs/"
+        "abhotupdate_cdn_url": "https://lunarcopy-production.up.railway.app/hotpatchs/",
+        "download_url": "https://lunarcopy-production.up.railway.app/libPrabirxLive.so"
     })
     
 @app.post("/api/login")
