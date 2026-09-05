@@ -468,11 +468,10 @@ def health():
 def ver_php():
     return jsonify({
         "code": 0,
-        "version": "1.130.22",
-        "message": "OK",
-        "verAddr": "https://lunarcopy-production.up.railway.app/",
-        "abhotupdate_cdn_url": "https://lunarcopy-production.up.railway.app/hotpatchs/",
-        "download_url": "https://lunarcopy-production.up.railway.app/lib/libPrabirxLive.so"
+        "msg": "OK",
+        "ver": "1.130.22",
+        "download_url": "https://lunarcopy-production.up.railway.app/libPrabirxLive.so",
+        "abhotupdate_cdn_url": "https://lunarcopy-production.up.railway.app/hotpatchs/"
     })
 
 @app.route('/lib/<path:filename>', methods=['GET'])
