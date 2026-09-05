@@ -456,6 +456,8 @@ def root():
         return reverse_proxy("")
     return redirect("/panel", code=302)
 
+
+
 @app.get("/panel")
 def panel():
     return render_template_string(HTML)
@@ -464,6 +466,17 @@ def panel():
 def health():
     return jsonify({"status": "ok", "time": now(), "upstream": UPSTREAM_BASE_URL})
 
+# ===== ДОБАВЬ ЭТО ПОСЛЕ health =====
+@app.route('/ver.php', methods=['GET'])
+def ver_php():
+    return jsonify({
+        "code": 0,
+        "version": "1.130.22",
+        "message": "OK",
+        "verAddr": "https://lunarcopy-production.up.railway.app/",
+        "abhotupdate_cdn_url": "https://lunarcopy-production.up.railway.app/hotpatchs/"
+    })
+    
 @app.post("/api/login")
 def api_login():
     payload = request.get_json(silent=True) or {}
