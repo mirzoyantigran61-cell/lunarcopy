@@ -41,8 +41,8 @@ MAX_KEYS_PER_ADMIN = 1000
 IP_API_URL = "https://api.ipify.org?format=json"
 # User-facing: public IP lookup (educational; user copies IPv4 manually)
 IP_LOOKUP_URL = "https://www.whatismyip.com/"
-SUPPORT_USERNAME = "@erzohack"
-MINI_APP_URL = "https://nguyenvantai/miniapp"
+SUPPORT_USERNAME = "@TigranUser_bot"
+MINI_APP_URL = "https://lunarcopy-production.up.railway.app/miniapp"
 
 # System Name
 SYSTEM_NAME = "Uyen Proxy"
