@@ -1,0 +1,263 @@
+# ═══════════════════════════════════════════════════════════════
+# Keys Pagination System for Owner & Admin Bots
+# Add this code to nitro_system/bots.py
+# ═══════════════════════════════════════════════════════════════
+
+# CONFIGURATION
+KEYS_PER_PAGE = 8  # عدد المفاتيح في كل صفحة
+
+# ═══════════════════════════════════════════════════════════════
+# 1. Add to LANG["ar"] dictionary:
+# ═══════════════════════════════════════════════════════════════
+
+"page_info": "📄 صفحة {current} من {total}",
+"next_page": "التالي ➡️",
+"prev_page": "⬅️ السابق",
+"no_more_pages": "لا توجد صفحات أخرى",
+
+# ═══════════════════════════════════════════════════════════════
+# 2. Add to LANG["en"] dictionary:
+# ═══════════════════════════════════════════════════════════════
+
+"page_info": "📄 Page {current} of {total}",
+"next_page": "Next ➡️",
+"prev_page": "⬅️ Previous",
+"no_more_pages": "No more pages",
+
+# ═══════════════════════════════════════════════════════════════
+# 3. Add to LANG["ru"] dictionary:
+# ═══════════════════════════════════════════════════════════════
+
+"page_info": "📄 Страница {current} из {total}",
+"next_page": "Далее ➡️",
+"prev_page": "⬅️ Назад",
+"no_more_pages": "Больше нет страниц",
+
+# ═══════════════════════════════════════════════════════════════
+# 4. Helper Functions - Add these BEFORE owner_callback function:
+# ═══════════════════════════════════════════════════════════════
+
+def paginate_list(items, page=1, per_page=KEYS_PER_PAGE):
+    """Paginate a list of items"""
+    total_items = len(items)
+    total_pages = (total_items + per_page - 1) // per_page  # Ceiling division
+    
+    if page < 1:
+        page = 1
+    if page > total_pages and total_pages > 0:
+        page = total_pages
+    
+    start_idx = (page - 1) * per_page
+    end_idx = start_idx + per_page
+    
+    return {
+        'items': items[start_idx:end_idx],
+        'page': page,
+        'total_pages': total_pages,
+        'total_items': total_items,
+        'has_next': page < total_pages,
+        'has_prev': page > 1
+    }
+
+def create_pagination_keyboard(callback_prefix, page, total_pages, back_callback, lang='en'):
+    """Create pagination keyboard buttons"""
+    kb = []
+    
+    # Navigation buttons
+    nav_row = []
+    if page > 1:
+        nav_row.append(InlineKeyboardButton(
+            LANG[lang]["prev_page"],
+            callback_data=f'{callback_prefix}_page_{page-1}'
+        ))
+    
+    # Page info
+    nav_row.append(InlineKeyboardButton(
+        LANG[lang]["page_info"].format(current=page, total=total_pages),
+        callback_data='page_info'
+    ))
+    
+    if page < total_pages:
+        nav_row.append(InlineKeyboardButton(
+            LANG[lang]["next_page"],
+            callback_data=f'{callback_prefix}_page_{page+1}'
+        ))
+    
+    if nav_row:
+        kb.append(nav_row)
+    
+    # Back button
+    kb.append([InlineKeyboardButton(LANG[lang]["back"], callback_data=back_callback)])
+    
+    return kb
+
+# ═══════════════════════════════════════════════════════════════
+# 5. OWNER BOT - Replace 'o_all_keys' handler in owner_callback:
+# ═══════════════════════════════════════════════════════════════
+
+elif q.data == 'o_all_keys' or q.data.startswith('o_all_keys_page_'):
+    # Extract page number
+    page = 1
+    if q.data.startswith('o_all_keys_page_'):
+        try:
+            page = int(q.data.split('_')[-1])
+        except:
+            page = 1
+    
+    lkeys = load_license_keys()
+    all_keys = [(k, rec) for k, rec in lkeys.items() if rec.get("status") in ("pending", "active")]
+    
+    if not all_keys:
+        msg = LANG[lang]["no_keys"]
+        kb = [[InlineKeyboardButton(LANG[lang]["back"], callback_data='o_back')]]
+        await q.edit_message_text(msg, reply_markup=InlineKeyboardMarkup(kb))
+        return
+    
+    # Paginate keys
+    paginated = paginate_list(all_keys, page, KEYS_PER_PAGE)
+    
+    msg = "🔑 " + ("جميع المفاتيح" if lang == "ar" else "ALL KEYS" if lang == "en" else "ВСЕ КЛЮЧИ") + "\n\n"
+    msg += LANG[lang]["page_info"].format(current=paginated['page'], total=paginated['total_pages']) + "\n"
+    msg += f"📊 Total: {paginated['total_items']} keys\n\n"
+    
+    for key, rec in paginated['items']:
+        status_emoji = "✅" if rec.get("status") == "active" else "⏳"
+        admin_id = rec.get("admin", "Unknown")
+        
+        if rec.get("status") == "active":
+            ip = rec.get("activated_ip", "N/A")
+            exp = rec.get("expires_at", 0)
+            if exp > time.time():
+                days = int((exp - time.time()) / 86400)
+                msg += f"{status_emoji} <code>{key}</code>\n"
+                msg += f"   IP: {ip} | Admin: {admin_id}\n"
+                msg += f"   Expires: {days}d\n\n"
+            else:
+                msg += f"❌ <code>{key}</code> (Expired)\n\n"
+        else:
+            msg += f"{status_emoji} <code>{key}</code> (Pending)\n"
+            msg += f"   Admin: {admin_id}\n\n"
+    
+    # Create keyboard with pagination
+    kb = []
+    for key, rec in paginated['items']:
+        kb.append([InlineKeyboardButton(
+            f"🔑 {key[:13]}...",
+            callback_data=f'okey_{key}'
+        )])
+    
+    # Add pagination buttons
+    kb.extend(create_pagination_keyboard('o_all_keys', paginated['page'], paginated['total_pages'], 'o_back', lang))
+    
+    await q.edit_message_text(msg, reply_markup=InlineKeyboardMarkup(kb), parse_mode=ParseMode.HTML)
+
+# ═══════════════════════════════════════════════════════════════
+# 6. ADMIN BOT - Replace 'a_keys' handler in admin_callback:
+# ═══════════════════════════════════════════════════════════════
+
+elif q.data == 'a_keys' or q.data.startswith('a_keys_page_'):
+    # Extract page number
+    page = 1
+    if q.data.startswith('a_keys_page_'):
+        try:
+            page = int(q.data.split('_')[-1])
+        except:
+            page = 1
+    
+    lkeys = load_license_keys()
+    admin_keys = [(k, rec) for k, rec in lkeys.items() 
+                  if str(rec.get("admin", "")) == aid and rec.get("status") in ("pending", "active")]
+    
+    if not admin_keys:
+        msg = LANG[lang]["no_keys"]
+        kb = [[InlineKeyboardButton(LANG[lang]["back"], callback_data='a_back')]]
+        await q.edit_message_text(msg, reply_markup=InlineKeyboardMarkup(kb))
+        return
+    
+    # Paginate keys
+    paginated = paginate_list(admin_keys, page, KEYS_PER_PAGE)
+    
+    msg = "🔑 " + ("مفاتيحي" if lang == "ar" else "MY KEYS" if lang == "en" else "МОИ КЛЮЧИ") + "\n\n"
+    msg += LANG[lang]["page_info"].format(current=paginated['page'], total=paginated['total_pages']) + "\n"
+    msg += f"📊 Total: {paginated['total_items']} keys\n\n"
+    
+    for key, rec in paginated['items']:
+        status_emoji = "✅" if rec.get("status") == "active" else "⏳"
+        
+        if rec.get("status") == "active":
+            ip = rec.get("activated_ip", "N/A")
+            exp = rec.get("expires_at", 0)
+            if exp > time.time():
+                days = int((exp - time.time()) / 86400)
+                date_str = datetime.fromtimestamp(exp).strftime('%Y-%m-%d')
+                msg += f"{status_emoji} <code>{key}</code>\n"
+                msg += f"   IP: {ip}\n"
+                msg += f"   Expires: {days}d ({date_str})\n\n"
+            else:
+                msg += f"❌ <code>{key}</code> (Expired)\n\n"
+        else:
+            msg += f"{status_emoji} <code>{key}</code> (Pending)\n\n"
+    
+    # Create keyboard with pagination
+    kb = create_pagination_keyboard('a_keys', paginated['page'], paginated['total_pages'], 'a_back', lang)
+    
+    await q.edit_message_text(msg, reply_markup=InlineKeyboardMarkup(kb), parse_mode=ParseMode.HTML)
+
+# ═══════════════════════════════════════════════════════════════
+# 7. ADMIN BOT - Update 'a_ban' handler for pagination:
+# ═══════════════════════════════════════════════════════════════
+
+elif q.data == 'a_ban' or q.data.startswith('a_ban_page_'):
+    # Extract page number
+    page = 1
+    if q.data.startswith('a_ban_page_'):
+        try:
+            page = int(q.data.split('_')[-1])
+        except:
+            page = 1
+    
+    lkeys = load_license_keys()
+    admin_keys = [k for k, rec in lkeys.items() 
+                  if str(rec.get("admin", "")) == aid and rec.get("status") in ("pending", "active") and not rec.get("banned", False)]
+    
+    if not admin_keys:
+        msg = LANG[lang]["no_keys"]
+        kb = [[InlineKeyboardButton(LANG[lang]["back"], callback_data='a_back')]]
+        await q.edit_message_text(msg, reply_markup=InlineKeyboardMarkup(kb))
+        return
+    
+    # Paginate keys
+    paginated = paginate_list(admin_keys, page, KEYS_PER_PAGE)
+    
+    msg = LANG[lang]["select_key_ban"] + "\n\n"
+    msg += LANG[lang]["page_info"].format(current=paginated['page'], total=paginated['total_pages'])
+    
+    kb = []
+    for key in paginated['items']:
+        kb.append([InlineKeyboardButton(key, callback_data=f'ban_{key}')])
+    
+    # Add pagination buttons
+    kb.extend(create_pagination_keyboard('a_ban', paginated['page'], paginated['total_pages'], 'a_back', lang))
+    
+    await q.edit_message_text(msg, reply_markup=InlineKeyboardMarkup(kb))
+
+# ═══════════════════════════════════════════════════════════════
+# 8. Handle page_info callback (does nothing, just for display):
+# ═══════════════════════════════════════════════════════════════
+
+elif q.data == 'page_info':
+    await q.answer(LANG[lang].get("page_info", "Page info"), show_alert=False)
+
+# ═══════════════════════════════════════════════════════════════
+# End of patch
+# ═══════════════════════════════════════════════════════════════
+
+# NOTES:
+# - KEYS_PER_PAGE = 8 means 8 keys per page (you can change this)
+# - Pagination works for:
+#   * Owner: All Keys view
+#   * Admin: My Keys view
+#   * Admin: Ban Key selection
+# - Navigation buttons appear only when needed
+# - Page info shows current page / total pages
+# - Keys are displayed with full details (IP, expiry, status)

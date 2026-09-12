@@ -1,0 +1,32 @@
+{
+  "9999": {
+    "name": "Drag Only",
+    "status": "safe",
+    "updated_at": 0,
+    "updated_by": null
+  },
+  "9998": {
+    "name": "Antenna Hand",
+    "status": "safe",
+    "updated_at": 0,
+    "updated_by": null
+  },
+  "9997": {
+    "name": "Magic Bullet",
+    "status": "not",
+    "updated_at": 1782842660.603684,
+    "updated_by": 7544190292
+  },
+  "9996": {
+    "name": "Body 90%",
+    "status": "safe",
+    "updated_at": 0,
+    "updated_by": null
+  },
+  "9995": {
+    "name": "Drag + Antenna",
+    "status": "safe",
+    "updated_at": 0,
+    "updated_by": null
+  }
+}

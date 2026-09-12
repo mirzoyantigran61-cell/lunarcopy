@@ -1,0 +1,91 @@
+# ═══════════════════════════════════════════════════════════════
+# Owner Bot - Mod Safety Status Management
+# Add this code to nitro_system/bots.py
+# ═══════════════════════════════════════════════════════════════
+
+# 1. Add import at the top (after other imports):
+from mod_safety_manager import load_mod_safety_status, save_mod_safety_status, update_mod_status
+
+# 2. Add to LANG["ar"] dictionary:
+"mod_safety": "🛡️ حالة أمان التعديلات",
+"mod_safety_panel": "🛡️ إدارة حالة أمان التعديلات\n\nاختر التعديل لتغيير حالته:",
+"mod_status_updated": "✅ تم تحديث حالة {mod_name}!\n\nالحالة الجديدة: {status}",
+"mark_safe": "✅ آمن (Safe)",
+"mark_not_safe": "⚠️ غير آمن (Ban Risk)",
+
+# 3. Add to LANG["en"] dictionary:
+"mod_safety": "🛡️ Mod Safety Status",
+"mod_safety_panel": "🛡️ Manage Modification Safety Status\n\nSelect modification to change status:",
+"mod_status_updated": "✅ Updated {mod_name} status!\n\nNew status: {status}",
+"mark_safe": "✅ Safe",
+"mark_not_safe": "⚠️ Not Safe (Ban Risk)",
+
+# 4. Add to LANG["ru"] dictionary:
+"mod_safety": "🛡️ Статус безопасности модов",
+"mod_safety_panel": "🛡️ Управление статусом безопасности\n\nВыберите мод для изменения статуса:",
+"mod_status_updated": "✅ Статус {mod_name} обновлен!\n\nНовый статус: {status}",
+"mark_safe": "✅ Безопасно",
+"mark_not_safe": "⚠️ Небезопасно (риск бана)",
+
+# 5. Add button in owner_start function (in the keyboard):
+[InlineKeyboardButton(LANG[lang]["mod_safety"], callback_data='o_mod_safety')],
+
+# 6. Add handler in owner_callback function:
+
+elif q.data == 'o_mod_safety':
+    mods = load_mod_safety_status()
+    msg = LANG[lang]["mod_safety_panel"]
+    kb = []
+    
+    for port in sorted(mods.keys(), reverse=True):
+        mod = mods[port]
+        status_emoji = "✅" if mod["status"] == "safe" else "⚠️"
+        kb.append([InlineKeyboardButton(
+            f"{status_emoji} {mod['name']} (Port {port})",
+            callback_data=f'mod_{port}'
+        )])
+    
+    kb.append([InlineKeyboardButton(LANG[lang]["back"], callback_data='o_back')])
+    await q.edit_message_text(msg, reply_markup=InlineKeyboardMarkup(kb))
+
+elif q.data.startswith('mod_'):
+    port = q.data[4:]
+    mods = load_mod_safety_status()
+    
+    if port in mods:
+        mod = mods[port]
+        current_status = "✅ Safe" if mod["status"] == "safe" else "⚠️ Not Safe"
+        msg = f"🛡️ {mod['name']} (Port {port})\n\n"
+        msg += f"Current Status: {current_status}\n\n"
+        msg += "Select new status:"
+        
+        kb = [
+            [InlineKeyboardButton(LANG[lang]["mark_safe"], callback_data=f'modset_{port}_safe')],
+            [InlineKeyboardButton(LANG[lang]["mark_not_safe"], callback_data=f'modset_{port}_not_safe')],
+            [InlineKeyboardButton(LANG[lang]["back"], callback_data='o_mod_safety')]
+        ]
+        await q.edit_message_text(msg, reply_markup=InlineKeyboardMarkup(kb))
+
+elif q.data.startswith('modset_'):
+    parts = q.data.split('_')
+    port = parts[1]
+    new_status = parts[2]
+    
+    mods = load_mod_safety_status()
+    if port in mods:
+        update_mod_status(port, new_status, OWNER_ID)
+        mods = load_mod_safety_status()
+        mod = mods[port]
+        
+        status_text = "✅ Safe" if new_status == "safe" else "⚠️ Not Safe (Ban Risk)"
+        msg = LANG[lang]["mod_status_updated"].format(
+            mod_name=mod["name"],
+            status=status_text
+        )
+        
+        kb = [[InlineKeyboardButton(LANG[lang]["back"], callback_data='o_mod_safety')]]
+        await q.edit_message_text(msg, reply_markup=InlineKeyboardMarkup(kb))
+
+# ═══════════════════════════════════════════════════════════════
+# End of patch
+# ═══════════════════════════════════════════════════════════════

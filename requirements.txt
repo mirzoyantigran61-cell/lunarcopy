@@ -1,0 +1,16 @@
+# Nitro Proxy - Python Dependencies
+
+# Telegram Bot Framework
+python-telegram-bot==20.7
+
+# HTTP Requests
+requests==2.31.0
+
+# Web Server (Auth Server)
+flask==3.0.0
+
+# Proxy Server
+mitmproxy==10.1.5
+
+# Installation:
+# pip install -r requirements.txt
