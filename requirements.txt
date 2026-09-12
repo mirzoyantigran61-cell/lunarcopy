@@ -1,6 +1,0 @@
-flask
-flask-socketio
-requests
-simple-websocket
-werkzeug
-pycryptodome
