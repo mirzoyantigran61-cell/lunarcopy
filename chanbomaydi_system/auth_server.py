@@ -273,10 +273,22 @@ def get_mod_safety():
         traceback.print_exc()
         raise
 
+@app.route("/", methods=["GET"])
+def home():
+    return {
+        "ok": True,
+        "status": "running"
+    }, 200
+
 if __name__ == '__main__':
-    print("\n" + "="*50)
-    print("🔒 Tigran Proxy - Auth Server")
-    print("="*50)
-    print("✅ Server running on http://127.0.0.1:5000")
-    print("="*50 + "\n")
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    import os
+
+    port = int(os.environ.get("PORT", "5000"))
+
+    print(f"✅ Server running on port {port}")
+
+    app.run(
+        host="0.0.0.0",
+        port=port,
+        debug=False
+    )
