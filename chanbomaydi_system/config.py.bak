@@ -1,5 +1,5 @@
 """
-⚙️ Nitro Proxy - Configuration
+⚙️ Tigran Proxy - Configuration
 """
 import os
 
@@ -45,4 +45,4 @@ SUPPORT_USERNAME = "@erzohack"
 MINI_APP_URL = "https://nguyenvantai/miniapp"
 
 # System Name
-SYSTEM_NAME = "Nitro Proxy"
+SYSTEM_NAME = "Tigran Proxy"

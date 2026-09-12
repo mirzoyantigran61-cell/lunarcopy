@@ -1,5 +1,5 @@
 """
-🎮 Nitro Proxy - Multi-Port Configuration
+🎮 Tigran Proxy - Multi-Port Configuration
 Each port serves different game modifications
 """
 

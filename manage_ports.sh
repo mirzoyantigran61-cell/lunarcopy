@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # ═══════════════════════════════════════════════════════════════
-# 🎮 Nitro Proxy - Multi-Port Management Script
+# 🎮 Tigran Proxy - Multi-Port Management Script
 # ═══════════════════════════════════════════════════════════════
 
 # Colors
@@ -25,7 +25,7 @@ PORTS[9995]="DragAntenna"
 show_menu() {
     clear
     echo -e "${BLUE}═══════════════════════════════════════════════════════════════${NC}"
-    echo -e "${GREEN}🎮 Nitro Proxy - Multi-Port Management${NC}"
+    echo -e "${GREEN}🎮 Tigran Proxy - Multi-Port Management${NC}"
     echo -e "${BLUE}═══════════════════════════════════════════════════════════════${NC}"
     echo ""
     echo -e "${CYAN}Available Ports:${NC}"
@@ -295,7 +295,7 @@ setup_all_services() {
         
         cat > /etc/systemd/system/nitro-proxy-$port.service << EOF
 [Unit]
-Description=Nitro Proxy Server - Port $port (${PORTS[$port]})
+Description=Tigran Proxy Server - Port $port (${PORTS[$port]})
 After=network.target nitro-auth.service
 
 [Service]

@@ -88,7 +88,7 @@ def _is_system_frozen():
 def check_auth():
     ip = request.remote_addr
     if is_allowed(ip):
-        return jsonify({"status": "success", "msg": "Nitro Proxy: License Active"}), 200
+        return jsonify({"status": "success", "msg": "Tigran Proxy: License Active"}), 200
     return jsonify({"status": "fail", "msg": f"IP {ip} is not active!"}), 403
 
 @app.route('/game_patches/<filename>')
@@ -115,7 +115,7 @@ def miniapp_files(filename):
         full_path = os.path.join(files_dir, filename)
         if not os.path.isfile(full_path):
             return "File not found", 404
-        download_filename = "NitroXMitm.crt" if lower.endswith(".pem") else os.path.basename(filename)
+        download_filename = "TigranXMitm.crt" if lower.endswith(".pem") else os.path.basename(filename)
         resp = send_file(
             full_path,
             as_attachment=True,
@@ -273,22 +273,10 @@ def get_mod_safety():
         traceback.print_exc()
         raise
 
-@app.route("/", methods=["GET"])
-def home():
-    return {
-        "ok": True,
-        "status": "running"
-    }, 200
-
 if __name__ == '__main__':
-    import os
-
-    port = int(os.environ.get("PORT", "5000"))
-
-    print(f"✅ Server running on port {port}")
-
-    app.run(
-        host="0.0.0.0",
-        port=port,
-        debug=False
-    )
+    print("\n" + "="*50)
+    print("🔒 Tigran Proxy - Auth Server")
+    print("="*50)
+    print("✅ Server running on http://127.0.0.1:5000")
+    print("="*50 + "\n")
+    app.run(host="0.0.0.0", port=5000, debug=True)

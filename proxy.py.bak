@@ -15,7 +15,7 @@ import re
 LOG_FILE = "mitm_log.txt"
 LOG_ENABLED = False
 
-# Nitro Proxy License System
+# Tigran Proxy License System
 _BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 _DATA_DIR = os.path.join(_BASE_DIR, "nitro_system", "data")
 IPS_FILE = os.path.join(_DATA_DIR, "allowed_ips.json")
@@ -106,7 +106,7 @@ def get_original_client_ip(flow: http.HTTPFlow):
     return peer_s
 
 def check_license(client_ip):
-    """Check if client IP has active Nitro Proxy license"""
+    """Check if client IP has active Tigran Proxy license"""
     try:
         # Owner freeze feature: pause all keys without consuming time.
         # When frozen, deny all license checks.
@@ -290,11 +290,11 @@ def response(flow: http.HTTPFlow):
         error_msg = {
             "status": "error",
             "code": 403,
-            "message": "🔒 Nitro Proxy: No Active License\n\n"
+            "message": "🔒 Tigran Proxy: No Active License\n\n"
                       "Your IP does not have an active subscription.\n"
                       "Contact your reseller to get a license key.\n\n"
                       f"Your IP: {client_ip}\n"
-                      "Bot: @NitroUsersBot"
+                      "Bot: @TigranUsersBot"
         }
         flow.response = http.Response.make(
             403,

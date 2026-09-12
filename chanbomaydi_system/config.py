@@ -1,5 +1,5 @@
 """
-⚙️ Nitro Proxy - Configuration
+⚙️ Tigran Proxy - Configuration
 """
 import os
 

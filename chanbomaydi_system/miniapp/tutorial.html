@@ -193,7 +193,7 @@
 <body>
   <div class="wrap">
     <div class="card">
-      <span class="pill">✨ Thiết lập Nitro Proxy</span>
+      <span class="pill">✨ Thiết lập Tigran Proxy</span>
       <h1>Hướng dẫn cấu hình</h1>
       <p class="muted">
         Tải chứng chỉ SSL và cấu hình Proxy. Mỗi loại mod sử dụng một cổng riêng để đạt hiệu năng tốt nhất.
@@ -220,7 +220,7 @@
       <div class="video-box">
         <iframe
           src="https://www.youtube.com/embed/kZag4xbtBLo?si=qp7oJcvhQIChffUN"
-          title="Video hướng dẫn Nitro Proxy"
+          title="Video hướng dẫn Tigran Proxy"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           referrerpolicy="strict-origin-when-cross-origin"
           allowfullscreen>
@@ -234,7 +234,7 @@
     const tgApp = (window.Telegram && window.Telegram.WebApp) ? window.Telegram.WebApp : null;
 
     function openCertInBrowser() {
-      const certUrl = `${window.location.origin}/miniapp/files/NitroXMitm.pem`;
+      const certUrl = `${window.location.origin}/miniapp/files/TigranXMitm.pem`;
       if (tgApp && typeof tgApp.openLink === "function") {
         tgApp.openLink(certUrl);
         return;
