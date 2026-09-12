@@ -273,6 +273,13 @@ def get_mod_safety():
         traceback.print_exc()
         raise
 
+@app.route("/", methods=["GET"])
+def home():
+    return {
+        "ok": True,
+        "status": "running"
+    }, 200
+
 if __name__ == '__main__':
     import os
 
