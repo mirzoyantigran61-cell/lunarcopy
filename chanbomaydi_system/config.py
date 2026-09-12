@@ -9,9 +9,9 @@ _DATA_DIR = os.path.join(_BASE_DIR, "data")
 
 # Bot Tokens
 TOKENS = {
-    "owner": "8640728990:AAEbIP1ljEry_AP6c9DWZ2iXYW6oIWT69Ps",
-    "admin": "8640728990:AAEbIP1ljEry_AP6c9DWZ2iXYW6oIWT69Ps",
-    "user": "8726810917:AAHhhGVzODBCFWnpfvz7MSxTws0YiSAzsm8"
+    "owner": "8854847237:AAFyrA7wHIg6RjqRbggud2B-PMImGVmzNws",
+    "admin": "8865666603:AAHJ7Yjn7XXBFOohybPJmXZulR76jC8QzQE",
+    "user": "8951026225:AAH89YWLZe0XVBE-3e5PlKTGLFFkPbhBBrM"
 }
 
 # Owner ID
