@@ -42,7 +42,7 @@ IP_API_URL = "https://api.ipify.org?format=json"
 # User-facing: public IP lookup (educational; user copies IPv4 manually)
 IP_LOOKUP_URL = "https://www.whatismyip.com/"
 SUPPORT_USERNAME = "@TigranUser_bot"
-MINI_APP_URL = "https://raw.githubusercontent.com/mirzoyantigran61-cell/lunarcopy/refs/heads/main/chanbomaydi_system/miniapp/files/TigranXMitm.crt"
+MINI_APP_URL = "https://lunarcopy-production.up.railway.app/download/TigranXTest.zip""
 
 # System Name
 SYSTEM_NAME = "Uyen Proxy"
