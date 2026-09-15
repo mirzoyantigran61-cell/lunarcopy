@@ -1,1 +1,673 @@
 
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    >
+
+    <meta name="theme-color" content="#03050b">
+
+    <title>TIGRAN AI — Вход</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            margin: 0;
+            width: 100%;
+            min-height: 100%;
+        }
+
+        body {
+            min-height: 100vh;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            padding:
+                calc(24px + env(safe-area-inset-top))
+                18px
+                calc(24px + env(safe-area-inset-bottom));
+
+            font-family:
+                Inter,
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                Arial,
+                sans-serif;
+
+            color: #ffffff;
+
+            background:
+                radial-gradient(
+                    circle at 50% -10%,
+                    rgba(43, 105, 220, 0.34),
+                    transparent 38%
+                ),
+                radial-gradient(
+                    circle at 90% 80%,
+                    rgba(94, 75, 220, 0.16),
+                    transparent 32%
+                ),
+                linear-gradient(
+                    180deg,
+                    #071020 0%,
+                    #03050b 100%
+                );
+        }
+
+        .page {
+            width: 100%;
+            max-width: 430px;
+        }
+
+        .logo-area {
+            margin-bottom: 28px;
+            text-align: center;
+        }
+
+        .logo {
+            width: 74px;
+            height: 74px;
+
+            margin: 0 auto 17px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border:
+                1px solid
+                rgba(100, 210, 255, 0.32);
+
+            border-radius: 23px;
+
+            color: #75e1ff;
+
+            font-size: 26px;
+            font-weight: 900;
+            letter-spacing: -1px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(28, 67, 126, 0.75),
+                    rgba(11, 20, 42, 0.95)
+                );
+
+            box-shadow:
+                0 0 40px rgba(55, 172, 255, 0.18),
+                inset 0 0 25px rgba(87, 194, 255, 0.08);
+        }
+
+        .title {
+            margin: 0;
+
+            color: #75ddff;
+
+            font-size: 30px;
+            font-weight: 900;
+            letter-spacing: 1.4px;
+
+            text-shadow:
+                0 0 24px
+                rgba(63, 194, 255, 0.35);
+        }
+
+        .subtitle {
+            margin-top: 7px;
+
+            color: #7788a8;
+
+            font-size: 13px;
+            letter-spacing: 0.6px;
+        }
+
+        .card {
+            padding: 24px;
+
+            border:
+                1px solid
+                rgba(99, 151, 226, 0.20);
+
+            border-radius: 25px;
+
+            background:
+                rgba(8, 15, 30, 0.86);
+
+            box-shadow:
+                0 22px 70px
+                rgba(0, 0, 0, 0.42);
+
+            backdrop-filter: blur(22px);
+            -webkit-backdrop-filter: blur(22px);
+        }
+
+        .card-title {
+            margin-bottom: 5px;
+
+            font-size: 20px;
+            font-weight: 800;
+        }
+
+        .card-description {
+            margin-bottom: 22px;
+
+            color: #71809e;
+
+            font-size: 13px;
+            line-height: 1.45;
+        }
+
+        .field {
+            margin-bottom: 14px;
+        }
+
+        .field label {
+            display: block;
+
+            margin: 0 0 7px 3px;
+
+            color: #91a1bf;
+
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .input {
+            width: 100%;
+            height: 51px;
+
+            padding: 0 15px;
+
+            border:
+                1px solid
+                #203454;
+
+            border-radius: 14px;
+
+            outline: none;
+
+            color: #ffffff;
+
+            font-family: inherit;
+            font-size: 15px;
+
+            background:
+                #0b1427;
+
+            transition:
+                border-color 0.18s,
+                box-shadow 0.18s,
+                background 0.18s;
+        }
+
+        .input::placeholder {
+            color: #50607d;
+        }
+
+        .input:focus {
+            border-color: #4bbfe9;
+
+            background:
+                #0c172c;
+
+            box-shadow:
+                0 0 0 3px
+                rgba(67, 190, 239, 0.10);
+        }
+
+        .password-wrap {
+            position: relative;
+        }
+
+        .password-wrap .input {
+            padding-right: 58px;
+        }
+
+        .show-password {
+            position: absolute;
+
+            top: 50%;
+            right: 8px;
+
+            transform:
+                translateY(-50%);
+
+            width: 42px;
+            height: 38px;
+
+            border: none;
+            border-radius: 10px;
+
+            cursor: pointer;
+
+            color: #8da1c3;
+
+            font-size: 17px;
+
+            background: transparent;
+        }
+
+        .show-password:active {
+            background:
+                rgba(255, 255, 255, 0.05);
+        }
+
+        .primary-button {
+            width: 100%;
+            height: 51px;
+
+            margin-top: 5px;
+
+            border: none;
+            border-radius: 14px;
+
+            cursor: pointer;
+
+            color: #04101a;
+
+            font-family: inherit;
+            font-size: 15px;
+            font-weight: 800;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #61dcff,
+                    #7c91ff
+                );
+
+            box-shadow:
+                0 10px 30px
+                rgba(75, 166, 255, 0.18);
+        }
+
+        .primary-button:active {
+            transform: scale(0.99);
+        }
+
+        button:disabled {
+            opacity: 0.55;
+            cursor: default;
+        }
+
+        .actions {
+            margin-top: 12px;
+
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 9px;
+        }
+
+        .secondary-button {
+            min-height: 45px;
+
+            padding: 9px;
+
+            border:
+                1px solid
+                #213758;
+
+            border-radius: 13px;
+
+            cursor: pointer;
+
+            color: #a8b8d5;
+
+            font-family: inherit;
+            font-size: 12px;
+            font-weight: 650;
+
+            background:
+                #0c172b;
+        }
+
+        .secondary-button:active {
+            background:
+                #111f38;
+        }
+
+        .divider {
+            margin: 21px 0;
+
+            display: flex;
+            align-items: center;
+
+            color: #52617c;
+
+            font-size: 11px;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: "";
+
+            flex: 1;
+
+            height: 1px;
+
+            background:
+                #1d2c47;
+        }
+
+        .divider span {
+            padding: 0 12px;
+        }
+
+        .google-button {
+            width: 100%;
+            height: 50px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            gap: 11px;
+
+            border:
+                1px solid
+                #263b5e;
+
+            border-radius: 14px;
+
+            cursor: pointer;
+
+            color: #e7efff;
+
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 700;
+
+            background:
+                #101a2e;
+        }
+
+        .google-button:active {
+            background:
+                #14223c;
+        }
+
+        .google-icon {
+            width: 24px;
+            height: 24px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 50%;
+
+            color: #4285f4;
+
+            font-family: Arial, sans-serif;
+            font-size: 17px;
+            font-weight: 900;
+
+            background: white;
+        }
+
+        #status {
+            display: none;
+
+            margin-top: 17px;
+
+            padding: 11px 13px;
+
+            border-radius: 12px;
+
+            font-size: 12px;
+            line-height: 1.45;
+            word-break: break-word;
+        }
+
+        #status.error {
+            display: block;
+
+            color: #ff9aaa;
+
+            border:
+                1px solid
+                rgba(255, 102, 126, 0.22);
+
+            background:
+                rgba(255, 73, 103, 0.08);
+        }
+
+        #status.success {
+            display: block;
+
+            color: #83f4c1;
+
+            border:
+                1px solid
+                rgba(67, 231, 160, 0.20);
+
+            background:
+                rgba(43, 205, 140, 0.08);
+        }
+
+        #status.info {
+            display: block;
+
+            color: #8edfff;
+
+            border:
+                1px solid
+                rgba(67, 187, 255, 0.20);
+
+            background:
+                rgba(55, 156, 255, 0.08);
+        }
+
+        .footer {
+            margin-top: 20px;
+
+            text-align: center;
+
+            color: #4d5d78;
+
+            font-size: 11px;
+        }
+
+        @media (max-width: 390px) {
+            .card {
+                padding: 20px 17px;
+            }
+
+            .title {
+                font-size: 27px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="page">
+
+    <div class="logo-area">
+
+        <div class="logo">
+            AI
+        </div>
+
+        <h1 class="title">
+            TIGRAN AI
+        </h1>
+
+        <div class="subtitle">
+            AI Workspace
+        </div>
+
+    </div>
+
+
+    <div class="card">
+
+        <div class="card-title">
+            Добро пожаловать
+        </div>
+
+        <div class="card-description">
+            Войдите в аккаунт, чтобы продолжить работу с TIGRAN AI.
+        </div>
+
+
+        <div class="field">
+
+            <label for="email">
+                Email
+            </label>
+
+            <input
+                id="email"
+                class="input"
+                type="email"
+                inputmode="email"
+                autocomplete="email"
+                placeholder="example@gmail.com"
+            >
+
+        </div>
+
+
+        <div class="field">
+
+            <label for="password">
+                Пароль
+            </label>
+
+            <div class="password-wrap">
+
+                <input
+                    id="password"
+                    class="input"
+                    type="password"
+                    autocomplete="current-password"
+                    placeholder="Введите пароль"
+                >
+
+                <button
+                    id="showPassword"
+                    class="show-password"
+                    type="button"
+                    aria-label="Показать пароль"
+                >
+                    ◉
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <button
+            id="loginButton"
+            class="primary-button"
+            type="button"
+        >
+            Войти
+        </button>
+
+
+        <div class="actions">
+
+            <button
+                id="registerButton"
+                class="secondary-button"
+                type="button"
+            >
+                Создать аккаунт
+            </button>
+
+            <button
+                id="resetButton"
+                class="secondary-button"
+                type="button"
+            >
+                Сбросить пароль
+            </button>
+
+        </div>
+
+
+        <div class="divider">
+            <span>ИЛИ</span>
+        </div>
+
+
+        <button
+            id="googleButton"
+            class="google-button"
+            type="button"
+        >
+
+            <span class="google-icon">
+                G
+            </span>
+
+            <span>
+                Войти через Google
+            </span>
+
+        </button>
+
+
+        <div
+            id="status"
+            role="status"
+            aria-live="polite"
+        ></div>
+
+    </div>
+
+
+    <div class="footer">
+        TIGRAN AI • Secure Authentication
+    </div>
+
+</div>
+
+
+<script>
+    const passwordInput =
+        document.getElementById("password");
+
+    const showPassword =
+        document.getElementById("showPassword");
+
+    showPassword.addEventListener(
+        "click",
+        () => {
+
+            if (
+                passwordInput.type === "password"
+            ) {
+                passwordInput.type = "text";
+                showPassword.textContent = "●";
+            } else {
+                passwordInput.type = "password";
+                showPassword.textContent = "◉";
+            }
+        }
+    );
+</script>
+
+
+<script
+    type="module"
+    src="/miniapp/js/firebase-auth.js"
+></script>
+
+</body>
+</html>
