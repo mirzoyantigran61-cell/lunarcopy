@@ -12,5 +12,11 @@ flask==3.0.0
 # Proxy Server
 mitmproxy==10.1.5
 
+# Firebase Authentication
+firebase-admin
+
+# OpenAI / TIGRAN AI
+openai
+
 # Installation:
 # pip install -r requirements.txt
