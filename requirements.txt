@@ -9,9 +9,6 @@ requests==2.31.0
 # Web Server (Auth Server)
 flask==3.0.0
 
-# Proxy Server
-mitmproxy==10.1.5
-
 # Firebase Authentication
 firebase-admin
 
