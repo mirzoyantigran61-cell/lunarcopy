@@ -13,6 +13,7 @@
     "device_bound_at": 1782850597.1529706,
     "telegram_user": "7544190292"
   },
+
   "TKF7-T7WJ-JQP3": {
     "status": "active",
     "admin": "7544190292",
@@ -28,5 +29,15 @@
     "telegram_user": "7544190292",
     "last_rebind_at": 1782905810.9278543,
     "rebind_count": 8
+  },
+
+  "WBP9-5LR7-XYYZ": {
+    "status": "pending",
+    "admin": "7544190292",
+    "duration_days": 7,
+    "duration_type": "custom",
+    "created_at": 0,
+    "cost_paid": 0.0,
+    "banned": false
   }
 }

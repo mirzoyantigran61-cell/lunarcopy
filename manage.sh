@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # ═══════════════════════════════════════════════════════════════
-# 🎮 Nitro Proxy - Management Script
+# 🎮 Tigran Proxy - Management Script
 # ═══════════════════════════════════════════════════════════════
 
 # Colors
@@ -14,7 +14,7 @@ NC='\033[0m' # No Color
 show_menu() {
     clear
     echo -e "${BLUE}═══════════════════════════════════════════════════════════════${NC}"
-    echo -e "${GREEN}🎮 Nitro Proxy - Management Panel${NC}"
+    echo -e "${GREEN}🎮 Tigran Proxy - Management Panel${NC}"
     echo -e "${BLUE}═══════════════════════════════════════════════════════════════${NC}"
     echo ""
     echo "1) 🚀 Start All Services"
