@@ -16,10 +16,20 @@ from key_manager import (
     normalize_key,
 )
 
+# ============================================================
+# TIGRAN AI / FIREBASE
+# ============================================================
+
+from account_auth import account_bp
+from ai_api import ai_bp
+
+
 app = Flask(__name__)
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+app.register_blueprint(account_bp)
+app.register_blueprint(ai_bp)
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 MATERIAL_DIR = os.path.normpath(
     os.path.join(BASE_DIR, "..", "game_patches")
 )
@@ -369,7 +379,39 @@ def miniapp_index():
         "index.html"
     )
 
+# ============================================================
+# TIGRAN AI PAGES
+# ============================================================
 
+@app.route("/miniapp/login")
+def miniapp_login():
+
+    return send_from_directory(
+        MINIAPP_DIR,
+        "login.html"
+    )
+
+
+@app.route("/miniapp/ai")
+def miniapp_ai():
+
+    return send_from_directory(
+        MINIAPP_DIR,
+        "ai.html"
+    )
+
+
+@app.route("/miniapp/js/<path:filename>")
+def miniapp_js(filename):
+
+    return send_from_directory(
+        os.path.join(
+            MINIAPP_DIR,
+            "js"
+        ),
+        filename
+    )
+    
 @app.route("/miniapp/tutorial")
 def miniapp_tutorial():
 
