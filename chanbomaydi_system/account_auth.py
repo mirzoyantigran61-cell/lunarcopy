@@ -1,4 +1,3 @@
-
 import json
 import os
 from functools import wraps
@@ -10,24 +9,19 @@ from flask import Blueprint, jsonify, request
 
 account_bp = Blueprint("account_auth", __name__)
 
+_firebase_error = None
+
 
 # ============================================================
 # FIREBASE ADMIN INITIALIZATION
 # ============================================================
 
 def _initialize_firebase():
-    """
-    Firebase Admin запускается один раз.
-
-    Railway variable:
-        FIREBASE_SERVICE_ACCOUNT_JSON
-
-    Значение переменной = полный JSON Service Account.
-    Сам JSON НЕ нужно сохранять в GitHub.
-    """
+    global _firebase_error
 
     if firebase_admin._apps:
-        return
+        _firebase_error = None
+        return True
 
     raw_credentials = os.environ.get(
         "FIREBASE_SERVICE_ACCOUNT_JSON",
@@ -35,15 +29,66 @@ def _initialize_firebase():
     ).strip()
 
     if not raw_credentials:
+        _firebase_error = "missing_service_account"
+
         print(
-            "⚠️ FIREBASE_SERVICE_ACCOUNT_JSON is not configured"
+            "⚠️ Firebase Admin: "
+            "FIREBASE_SERVICE_ACCOUNT_JSON is missing"
         )
-        return
+
+        return False
 
     try:
         service_account = json.loads(
             raw_credentials
         )
+
+        # Railway variable может быть JSON,
+        # сохранённым как JSON-строка.
+        if isinstance(service_account, str):
+            service_account = json.loads(
+                service_account
+            )
+
+        if not isinstance(
+            service_account,
+            dict
+        ):
+            raise ValueError(
+                "Service account must be a JSON object"
+            )
+
+        required_fields = (
+            "project_id",
+            "private_key",
+            "client_email"
+        )
+
+        missing_fields = [
+            field
+            for field in required_fields
+            if not service_account.get(field)
+        ]
+
+        if missing_fields:
+            raise ValueError(
+                "Service account is missing required fields: "
+                + ", ".join(missing_fields)
+            )
+
+        # На случай если Railway сохранил
+        # переносы строк как буквальные \n.
+        private_key = service_account.get(
+            "private_key"
+        )
+
+        if isinstance(private_key, str):
+            service_account["private_key"] = (
+                private_key.replace(
+                    "\\n",
+                    "\n"
+                )
+            )
 
         cred = credentials.Certificate(
             service_account
@@ -53,17 +98,40 @@ def _initialize_firebase():
             cred
         )
 
+        _firebase_error = None
+
         print(
             "✅ Firebase Admin initialized"
         )
 
+        return True
+
     except Exception as exc:
+        _firebase_error = type(exc).__name__
+
         print(
-            f"❌ Firebase initialization error: {exc}"
+            "❌ Firebase Admin initialization failed: "
+            f"{type(exc).__name__}: {exc}"
         )
+
+        return False
 
 
 _initialize_firebase()
+
+
+# ============================================================
+# FIREBASE STATUS
+# ============================================================
+
+def firebase_ready():
+
+    if firebase_admin._apps:
+        return True
+
+    # Повторная попытка нужна, если при первом
+    # импорте конфигурация была недоступна.
+    return _initialize_firebase()
 
 
 # ============================================================
@@ -98,7 +166,7 @@ def _get_bearer_token():
 
 def verify_firebase_token():
 
-    if not firebase_admin._apps:
+    if not firebase_ready():
 
         return None, {
             "ok": False,
@@ -116,8 +184,6 @@ def verify_firebase_token():
 
     try:
 
-        # check_revoked=True также не принимает
-        # отозванные Firebase-сессии.
         decoded = auth.verify_id_token(
             token,
             check_revoked=True
@@ -156,7 +222,8 @@ def verify_firebase_token():
     except Exception as exc:
 
         print(
-            f"❌ Firebase token verification error: {exc}"
+            "❌ Firebase token verification failed: "
+            f"{type(exc).__name__}: {exc}"
         )
 
         return None, {
@@ -166,7 +233,7 @@ def verify_firebase_token():
 
 
 # ============================================================
-# DECORATOR FOR PROTECTED API
+# DECORATOR
 # ============================================================
 
 def firebase_required(view_function):
@@ -178,9 +245,17 @@ def firebase_required(view_function):
 
         if error:
 
+            status_code = 401
+
+            if (
+                error.get("error")
+                == "firebase_not_configured"
+            ):
+                status_code = 503
+
             return jsonify(
                 error
-            ), 401
+            ), status_code
 
         request.firebase_user = user
 
@@ -209,21 +284,10 @@ def account_me():
         "ok": True,
 
         "user": {
-            "uid": user.get(
-                "uid"
-            ),
-
-            "email": user.get(
-                "email"
-            ),
-
-            "name": user.get(
-                "name"
-            ),
-
-            "picture": user.get(
-                "picture"
-            ),
+            "uid": user.get("uid"),
+            "email": user.get("email"),
+            "name": user.get("name"),
+            "picture": user.get("picture"),
 
             "email_verified": bool(
                 user.get(
@@ -245,9 +309,20 @@ def account_me():
 )
 def account_health():
 
-    return jsonify({
+    ready = firebase_ready()
+
+    result = {
         "ok": True,
-        "firebase_ready": bool(
-            firebase_admin._apps
+        "firebase_ready": ready
+    }
+
+    # Показываем только тип проблемы,
+    # никаких ключей/credentials.
+    if not ready and _firebase_error:
+        result["firebase_error"] = (
+            _firebase_error
         )
-    }), 200
+
+    return jsonify(
+        result
+    ), 200
