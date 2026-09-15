@@ -1,13 +1,13 @@
 #!/bin/bash
 
 # ═══════════════════════════════════════════════════════════════
-# 🚀 Tigran Proxy - VPS Auto Installation Script
+# 🚀 Nitro Proxy - VPS Auto Installation Script
 # ═══════════════════════════════════════════════════════════════
 
 set -e
 
 echo "═══════════════════════════════════════════════════════════════"
-echo "🚀 Tigran Proxy - VPS Installation"
+echo "🚀 Nitro Proxy - VPS Installation"
 echo "═══════════════════════════════════════════════════════════════"
 echo ""
 
@@ -68,7 +68,7 @@ echo -e "${YELLOW}[6/8]${NC} Creating systemd services..."
 # Auth Server Service
 cat > /etc/systemd/system/nitro-auth.service << EOF
 [Unit]
-Description=Tigran Proxy Auth Server
+Description=Nitro Proxy Auth Server
 After=network.target
 
 [Service]
@@ -86,7 +86,7 @@ EOF
 # Telegram Bots Service
 cat > /etc/systemd/system/nitro-bots.service << EOF
 [Unit]
-Description=Tigran Proxy Telegram Bots
+Description=Nitro Proxy Telegram Bots
 After=network.target nitro-auth.service
 
 [Service]
@@ -106,7 +106,7 @@ EOF
 # Important: block_global=false allows remote clients. Default true blocks public IPs connecting to this VPS.
 cat > /etc/systemd/system/nitro-proxy.service << EOF
 [Unit]
-Description=Tigran Proxy Server (mitmdump, block_global off for remote users)
+Description=Nitro Proxy Server (mitmdump, block_global off for remote users)
 After=network.target nitro-auth.service
 
 [Service]

@@ -1,11 +1,11 @@
 #!/bin/bash
 
 # ═══════════════════════════════════════════════════════════════
-# 🧪 Tigran Proxy - Multi-Port Testing Script
+# 🧪 Nitro Proxy - Multi-Port Testing Script
 # ═══════════════════════════════════════════════════════════════
 
 echo "═══════════════════════════════════════════════════════════════"
-echo "🧪 Testing Tigran Proxy Multi-Port System"
+echo "🧪 Testing Nitro Proxy Multi-Port System"
 echo "═══════════════════════════════════════════════════════════════"
 echo ""
 

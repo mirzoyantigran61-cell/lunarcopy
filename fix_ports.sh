@@ -1,13 +1,13 @@
 #!/bin/bash
 
 # ═══════════════════════════════════════════════════════════════
-# 🔧 Tigran Proxy - Fix Multi-Port Configuration
+# 🔧 Nitro Proxy - Fix Multi-Port Configuration
 # ═══════════════════════════════════════════════════════════════
 
 set -e
 
 echo "═══════════════════════════════════════════════════════════════"
-echo "🔧 Fixing Tigran Proxy Multi-Port Configuration"
+echo "🔧 Fixing Nitro Proxy Multi-Port Configuration"
 echo "═══════════════════════════════════════════════════════════════"
 echo ""
 
@@ -55,7 +55,7 @@ for port in $(echo "${!PORTS[@]}" | tr ' ' '\n' | sort -n); do
     
     cat > /etc/systemd/system/nitro-proxy-$port.service << EOF
 [Unit]
-Description=Tigran Proxy Server - Port $port (${PORTS[$port]})
+Description=Nitro Proxy Server - Port $port (${PORTS[$port]})
 After=network.target nitro-auth.service
 
 [Service]

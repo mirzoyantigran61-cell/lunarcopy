@@ -1,5 +1,5 @@
 """
-🤖 Tigran Proxy - Advanced 3-Bot Management System
+🤖 Nitro Proxy - Advanced 3-Bot Management System
 Owner Bot | Admin Bot | User Bot
 """
 import json, time, os, asyncio, re, hashlib, html as html_module
@@ -36,7 +36,7 @@ LANG = {
     "ar": {
         "owner_panel": "👑 لوحة المالك\n\n📊 إحصائيات النظام:\n├ 👨‍✈️ الموزعين: {admins}\n├ 🔑 المفاتيح: {keys}\n├ 👥 المستخدمين: {users}\n└ 💰 الإيرادات: ${revenue:.2f}\n\n🎯 اختر خياراً:",
         "admin_panel": "👨‍✈️ لوحة الموزع\n\nمرحباً {name}! 👋\n\n📊 إحصائياتك:\n├ 💰 المحفظة: ${wallet:.2f}\n├ 🔑 المفاتيح: {keys}\n└ ✅ النشطة: {active}\n\n💵 الأسعار:\n├ يوم: ${day:.2f}\n├ أسبوع: ${week:.2f}\n└ شهر: ${month:.2f}\n\n🎯 اختر خياراً:",
-        "user_panel": "👋 أهلاً {name}!\n\n🎮 Tigran Proxy - لوحة المستخدم\n\n🎯 اختر خياراً:",
+        "user_panel": "👋 أهلاً {name}!\n\n🎮 Nitro Proxy - لوحة المستخدم\n\n🎯 اختر خياراً:",
         "add_reseller": "➕ إضافة موزع",
         "manage_wallets": "💰 إدارة المحافظ",
         "ban_reseller": "🚫 حظر موزع",
@@ -101,7 +101,7 @@ LANG = {
         "select_key_ban": "🔑 اختر مفتاح للحظر:",
         "key_extended": "✅ تم تمديد المفتاح!\n\n🔑 IP: {ip}\n📅 المدة: {days} يوم\n⏰ ينتهي: {date}\n💰 التكلفة: ${cost:.2f}\n💵 الرصيد الجديد: ${balance:.2f}",
         "key_banned": "🚫 تم حظر المفتاح!\n\n🔑 IP: {ip}\n\n✅ تم تعطيل المفتاح",
-        "sub_active": "✅ اشتراكك نشط!\n\n🔑 IP الخاص بك: {ip}\n⏰ ينتهي: {date}\n📅 المتبقي: {days}d {hours}h\n\n🎮 استمتع بـ Tigran Proxy!",
+        "sub_active": "✅ اشتراكك نشط!\n\n🔑 IP الخاص بك: {ip}\n⏰ ينتهي: {date}\n📅 المتبقي: {days}d {hours}h\n\n🎮 استمتع بـ Nitro Proxy!",
         "sub_frozen_notice": "❄️ النظام في وضع التجميد (Maintenance).\n\n⏸️ المفتاح متجمد مؤقتًا ولن يعمل الآن.\n✅ مدة اشتراكك محفوظة ولن تنقص أثناء التجميد.\n\n🔑 IP: {ip}",
         "sub_inactive": "❌ لا يوجد اشتراك نشط\n\n🔑 IP الخاص بك: {ip}\n\n💬 تواصل مع موزع لتفعيل اشتراكك",
         "your_ip": "🌐 عنوان IP الخاص بك\n\n🔑 IP: {ip}\n\n💡 أرسل هذا الـ IP للموزع لتفعيل اشتراكك",
@@ -124,7 +124,7 @@ LANG = {
         "gen_select_duration": "⏰ اختر مدة المفتاح\n\n💰 رصيدك: ${wallet:.2f}",
         "gen_key_created": "✅ تم إنشاء المفتاح\n\n🔑 <b>انسخ الكود:</b>\n<code>{key}</code>\n\n📅 المدة: {days} يوم\n💰 التكلفة: ${cost:.2f}\n💵 رصيدك: ${balance:.2f}\n\n<i>اضغط على الكود أو انسخه لإرساله للمستخدم.</i>",
         "activate_btn": "✅ تفعيل مفتاح",
-        "mini_app_btn": "🚀 Tigran Dashboard",
+        "mini_app_btn": "🚀 Nitro Dashboard",
         "send_activation_key": "📝 التفعيل يدوي: أولاً المفتاح، ثم IPv4 من الموقع.",
         "license_activated_ok": "✅ تم التفعيل!\n\n🔑 IP المرتبط: {ip}\n⏰ ينتهي: {date}\n\n🎮 يمكنك اللعب الآن عبر البروكسي.",
         "license_err_not_found": "❌ المفتاح غير صحيح أو غير موجود.",
@@ -147,7 +147,7 @@ LANG = {
     "en": {
         "owner_panel": "👑 OWNER CONTROL PANEL\n\n📊 System Statistics:\n├ 👨‍✈️ Resellers: {admins}\n├ 🔑 Keys: {keys}\n├ 👥 Users: {users}\n└ 💰 Revenue: ${revenue:.2f}\n\n🎯 Select an option:",
         "admin_panel": "👨‍✈️ RESELLER PANEL\n\nWelcome back, {name}! 👋\n\n📊 Your Statistics:\n├ 💰 Wallet: ${wallet:.2f}\n├ 🔑 Keys: {keys}\n└ ✅ Active: {active}\n\n💵 Pricing:\n├ Day: ${day:.2f}\n├ Week: ${week:.2f}\n└ Month: ${month:.2f}\n\n🎯 Select an option:",
-        "user_panel": "👋 Welcome {name}!\n\n🎮 Tigran Proxy - User Panel\n\n🎯 Select an option:",
+        "user_panel": "👋 Welcome {name}!\n\n🎮 Nitro Proxy - User Panel\n\n🎯 Select an option:",
         "add_reseller": "➕ Add Reseller",
         "manage_wallets": "💰 Manage Wallets",
         "ban_reseller": "🚫 Ban Reseller",
@@ -212,7 +212,7 @@ LANG = {
         "select_key_ban": "🔑 Select key to ban:",
         "key_extended": "✅ KEY EXTENDED!\n\n🔑 IP: {ip}\n📅 Duration: {days} days\n⏰ Expires: {date}\n💰 Cost: ${cost:.2f}\n💵 New balance: ${balance:.2f}",
         "key_banned": "🚫 KEY BANNED!\n\n🔑 IP: {ip}\n\n✅ Key deactivated",
-        "sub_active": "✅ SUBSCRIPTION ACTIVE!\n\n🔑 Your IP: {ip}\n⏰ Expires: {date}\n📅 Remaining: {days}d {hours}h\n\n🎮 Enjoy Tigran Proxy!",
+        "sub_active": "✅ SUBSCRIPTION ACTIVE!\n\n🔑 Your IP: {ip}\n⏰ Expires: {date}\n📅 Remaining: {days}d {hours}h\n\n🎮 Enjoy Nitro Proxy!",
         "sub_frozen_notice": "❄️ SYSTEM IS FROZEN (MAINTENANCE MODE).\n\n⏸️ Your key is temporarily paused and cannot be used now.\n✅ Your subscription time is preserved and will not decrease during freeze.\n\n🔑 IP: {ip}",
         "sub_inactive": "❌ NO ACTIVE SUBSCRIPTION\n\n🔑 Your IP: {ip}\n\n💬 Contact a reseller to activate your subscription",
         "your_ip": "🌐 YOUR IP ADDRESS\n\n🔑 IP: {ip}\n\n💡 Send this IP to your reseller to activate your subscription",
@@ -235,7 +235,7 @@ LANG = {
         "gen_select_duration": "⏰ Choose key duration\n\n💰 Your wallet: ${wallet:.2f}",
         "gen_key_created": "✅ License key created\n\n🔑 <b>Copy this code:</b>\n<code>{key}</code>\n\n📅 Duration: {days} days\n💰 Cost: ${cost:.2f}\n💵 Your balance: ${balance:.2f}\n\n<i>Tap the code or copy to send to the user.</i>",
         "activate_btn": "✅ Activate key",
-        "mini_app_btn": "🚀 Tigran Dashboard",
+        "mini_app_btn": "🚀 Nitro Dashboard",
         "send_activation_key": "📝 Manual activation: key first, then IPv4 from the site.",
         "license_activated_ok": "✅ Activated!\n\n🔑 Bound IP: {ip}\n⏰ Expires: {date}\n\n🎮 You can use the proxy now.",
         "license_err_not_found": "❌ Invalid or unknown key.",
@@ -258,7 +258,7 @@ LANG = {
     "ru": {
         "owner_panel": "👑 ПАНЕЛЬ ВЛАДЕЛЬЦА\n\n📊 Статистика системы:\n├ 👨‍✈️ Реселлеров: {admins}\n├ 🔑 Ключей: {keys}\n├ 👥 Пользователей: {users}\n└ 💰 Доход: ${revenue:.2f}\n\n🎯 Выберите опцию:",
         "admin_panel": "👨‍✈️ ПАНЕЛЬ РЕСЕЛЛЕРА\n\nДобро пожаловать, {name}! 👋\n\n📊 Ваша статистика:\n├ 💰 Кошелек: ${wallet:.2f}\n├ 🔑 Ключей: {keys}\n└ ✅ Активных: {active}\n\n💵 Цены:\n├ День: ${day:.2f}\n├ Неделя: ${week:.2f}\n└ Месяц: ${month:.2f}\n\n🎯 Выберите опцию:",
-        "user_panel": "👋 Добро пожаловать, {name}!\n\n🎮 Tigran Proxy - Панель пользователя\n\n🎯 Выберите опцию:",
+        "user_panel": "👋 Добро пожаловать, {name}!\n\n🎮 Nitro Proxy - Панель пользователя\n\n🎯 Выберите опцию:",
         "add_reseller": "➕ Добавить реселлера",
         "manage_wallets": "💰 Управление кошельками",
         "ban_reseller": "🚫 Заблокировать реселлера",
@@ -323,7 +323,7 @@ LANG = {
         "select_key_ban": "🔑 Выберите ключ для блокировки:",
         "key_extended": "✅ КЛЮЧ ПРОДЛЕН!\n\n🔑 IP: {ip}\n📅 Длительность: {days} дней\n⏰ Истекает: {date}\n💰 Стоимость: ${cost:.2f}\n💵 Новый баланс: ${balance:.2f}",
         "key_banned": "🚫 КЛЮЧ ЗАБЛОКИРОВАН!\n\n🔑 IP: {ip}\n\n✅ Ключ деактивирован",
-        "sub_active": "✅ ПОДПИСКА АКТИВНА!\n\n🔑 Ваш IP: {ip}\n⏰ Истекает: {date}\n📅 Осталось: {days}d {hours}h\n\n🎮 Наслаждайтесь Tigran Proxy!",
+        "sub_active": "✅ ПОДПИСКА АКТИВНА!\n\n🔑 Ваш IP: {ip}\n⏰ Истекает: {date}\n📅 Осталось: {days}d {hours}h\n\n🎮 Наслаждайтесь Nitro Proxy!",
         "sub_frozen_notice": "❄️ СИСТЕМА ЗАМОРОЖЕНА (РЕЖИМ ОБСЛУЖИВАНИЯ).\n\n⏸️ Ключ временно приостановлен и сейчас не работает.\n✅ Время подписки сохранено и не уменьшается во время заморозки.\n\n🔑 IP: {ip}",
         "sub_inactive": "❌ НЕТ АКТИВНОЙ ПОДПИСКИ\n\n🔑 Ваш IP: {ip}\n\n💬 Свяжитесь с реселлером для активации подписки",
         "your_ip": "🌐 ВАШ IP-АДРЕС\n\n🔑 IP: {ip}\n\n💡 Отправьте этот IP реселлеру для активации подписки",
@@ -346,7 +346,7 @@ LANG = {
         "gen_select_duration": "⏰ Выберите срок ключа\n\n💰 Кошелек: ${wallet:.2f}",
         "gen_key_created": "✅ Ключ создан\n\n🔑 <b>Скопируйте код:</b>\n<code>{key}</code>\n\n📅 Срок: {days} дн.\n💰 Стоимость: ${cost:.2f}\n💵 Баланс: ${balance:.2f}\n\n<i>Нажмите на код или скопируйте.</i>",
         "activate_btn": "✅ Активировать ключ",
-        "mini_app_btn": "🚀 Tigran Dashboard",
+        "mini_app_btn": "🚀 Nitro Dashboard",
         "send_activation_key": "📝 Активация вручную: сначала ключ, затем IPv4 с сайта.",
         "license_activated_ok": "✅ Активировано!\n\n🔑 IP: {ip}\n⏰ Истекает: {date}\n\n🎮 Можно играть через прокси.",
         "license_err_not_found": "❌ Неверный ключ.",
@@ -1556,7 +1556,7 @@ async def user_check_sub_ip(update: Update, context: ContextTypes.DEFAULT_TYPE):
 # ═══════════════════════════════════════════════════════════════
 async def run_all_bots():
     print("\n" + "="*60)
-    print("🤖 Tigran Proxy - Advanced 3-Bot System")
+    print("🤖 Nitro Proxy - Advanced 3-Bot System")
     print("="*60)
     
     # Create applications
@@ -1649,9 +1649,9 @@ async def run_all_bots():
     await admin_app.start()
     await user_app.start()
     
-    print("✅ 1. Owner Bot   : ACTIVE (@OwnersTigranBot)")
-    print("✅ 2. Admin Bot   : ACTIVE (@TigranAdminsBot)")
-    print("✅ 3. User Bot    : ACTIVE (@TigranUsersBot)")
+    print("✅ 1. Owner Bot   : ACTIVE (@OwnersNitroBot)")
+    print("✅ 2. Admin Bot   : ACTIVE (@NitroAdminsBot)")
+    print("✅ 3. User Bot    : ACTIVE (@NitroUsersBot)")
     print("="*60 + "\n")
     
     # Start polling

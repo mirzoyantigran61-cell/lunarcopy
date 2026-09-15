@@ -207,8 +207,7 @@ def miniapp_activate():
             "expires_at": rec.get("expires_at", 0),
         }), 200
     except Exception as e:
-        traceback.print_exc()
-        raise
+        return jsonify({"ok": False, "error": str(e)}), 500
 
 @app.route('/miniapp/status', methods=['POST'])
 def miniapp_status():
@@ -260,8 +259,7 @@ def miniapp_status():
             keys = load_license_keys()
         return jsonify({"ok": True, "active": active, "frozen": _is_system_frozen()}), 200
     except Exception as e:
-        traceback.print_exc()
-        raise
+        return jsonify({"ok": False, "error": str(e)}), 500
 
 @app.route('/miniapp/mod_safety', methods=['GET'])
 def get_mod_safety():
@@ -270,8 +268,7 @@ def get_mod_safety():
         status = load_mod_safety_status()
         return jsonify({"ok": True, "mods": status}), 200
     except Exception as e:
-        traceback.print_exc()
-        raise
+        return jsonify({"ok": False, "error": str(e)}), 500
 
 if __name__ == '__main__':
     print("\n" + "="*50)
@@ -279,4 +276,4 @@ if __name__ == '__main__':
     print("="*50)
     print("✅ Server running on http://127.0.0.1:5000")
     print("="*50 + "\n")
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5000)

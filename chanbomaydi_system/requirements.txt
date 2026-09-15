@@ -1,4 +1,4 @@
-# Tigran Proxy - Bot System Dependencies
+# Nitro Proxy - Bot System Dependencies
 
 # Telegram Bot Framework
 python-telegram-bot==20.7
