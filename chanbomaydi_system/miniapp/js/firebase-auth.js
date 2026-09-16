@@ -1,4 +1,3 @@
-
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
 
 import {
@@ -8,8 +7,7 @@ import {
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
     sendPasswordResetEmail,
-    onAuthStateChanged,
-    signOut
+    onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
 
 
@@ -30,104 +28,204 @@ const auth = getAuth(app);
 
 auth.useDeviceLanguage();
 
+
 const googleProvider = new GoogleAuthProvider();
+
 googleProvider.setCustomParameters({
     prompt: "select_account"
 });
 
 
+const emailInput =
+    document.getElementById("email");
+
+const passwordInput =
+    document.getElementById("password");
+
+const loginButton =
+    document.getElementById("loginButton");
+
+const registerButton =
+    document.getElementById("registerButton");
+
+const resetButton =
+    document.getElementById("resetButton");
+
+const googleButton =
+    document.getElementById("googleButton");
+
+const statusElement =
+    document.getElementById("status");
+
+
 function showMessage(text, type = "info") {
-    const element = document.getElementById("message");
 
-    if (!element) return;
+    if (!statusElement) {
+        return;
+    }
 
-    element.textContent = text;
-    element.className = `message ${type}`;
+    statusElement.textContent = text;
+
+    statusElement.className = type;
 }
 
 
-async function goToAI(user) {
-    try {
-        const token = await user.getIdToken(true);
+function setLoading(loading) {
 
-        const response = await fetch("/api/account/me", {
-            method: "GET",
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        });
+    if (loginButton) {
+        loginButton.disabled = loading;
+    }
 
-        const data = await response.json();
+    if (registerButton) {
+        registerButton.disabled = loading;
+    }
 
-        if (!response.ok || !data.ok) {
-            throw new Error(
-                data.error || "Server authentication failed"
-            );
-        }
+    if (resetButton) {
+        resetButton.disabled = loading;
+    }
 
-        window.location.href = "/miniapp/ai";
-
-    } catch (error) {
-        console.error(error);
-
-        showMessage(
-            "Ошибка проверки аккаунта на сервере.",
-            "error"
-        );
+    if (googleButton) {
+        googleButton.disabled = loading;
     }
 }
 
 
-const googleButton =
-    document.getElementById("googleLogin");
+function friendlyError(error) {
 
-if (googleButton) {
-    googleButton.addEventListener("click", async () => {
-        try {
-            showMessage("Открываем Google...", "info");
+    console.error(error);
 
-            const result = await signInWithPopup(
-                auth,
-                googleProvider
-            );
+    const code = error?.code || "";
 
-            await goToAI(result.user);
+    switch (code) {
 
-        } catch (error) {
-            console.error(error);
+        case "auth/invalid-email":
+            return "Неверный Email.";
 
-            showMessage(
-                error.message || "Ошибка Google авторизации",
-                "error"
-            );
-        }
-    });
+        case "auth/missing-password":
+            return "Введите пароль.";
+
+        case "auth/invalid-credential":
+            return "Неверный Email или пароль.";
+
+        case "auth/email-already-in-use":
+            return "Аккаунт с таким Email уже существует.";
+
+        case "auth/weak-password":
+            return "Пароль слишком простой.";
+
+        case "auth/popup-closed-by-user":
+            return "Окно Google было закрыто.";
+
+        case "auth/popup-blocked":
+            return "Браузер заблокировал окно Google.";
+
+        case "auth/unauthorized-domain":
+            return "Этот домен не разрешён в Firebase.";
+
+        case "auth/network-request-failed":
+            return "Ошибка сети. Проверь подключение.";
+
+        default:
+            return error?.message || "Произошла ошибка.";
+    }
 }
 
 
-const loginButton =
-    document.getElementById("emailLogin");
+async function goToAI(user) {
 
-if (loginButton) {
-    loginButton.addEventListener("click", async () => {
+    showMessage(
+        "Проверяем аккаунт...",
+        "info"
+    );
+
+    const token =
+        await user.getIdToken(true);
+
+
+    const response =
+        await fetch(
+            "/api/account/me",
+            {
+                method: "GET",
+
+                headers: {
+                    Authorization:
+                        `Bearer ${token}`
+                }
+            }
+        );
+
+
+    let data;
+
+    try {
+        data = await response.json();
+    } catch {
+        throw new Error(
+            "Сервер вернул неправильный ответ."
+        );
+    }
+
+
+    if (
+        !response.ok ||
+        !data.ok
+    ) {
+
+        throw new Error(
+            data.error ||
+            "Server authentication failed"
+        );
+    }
+
+
+    showMessage(
+        "Готово. Открываем TIGRAN AI...",
+        "success"
+    );
+
+
+    window.location.replace(
+        "/miniapp/ai"
+    );
+}
+
+
+// ============================================================
+// EMAIL LOGIN
+// ============================================================
+
+loginButton?.addEventListener(
+    "click",
+    async () => {
+
         const email =
-            document.getElementById("email")
-                .value.trim();
+            emailInput?.value.trim();
 
         const password =
-            document.getElementById("password")
-                .value;
+            passwordInput?.value || "";
+
 
         if (!email || !password) {
+
             showMessage(
                 "Введите Email и пароль.",
                 "error"
             );
+
             return;
         }
 
+
+        setLoading(true);
+
+        showMessage(
+            "Выполняем вход...",
+            "info"
+        );
+
+
         try {
-            showMessage("Вход...", "info");
 
             const result =
                 await signInWithEmailAndPassword(
@@ -136,51 +234,70 @@ if (loginButton) {
                     password
                 );
 
-            await goToAI(result.user);
+
+            await goToAI(
+                result.user
+            );
 
         } catch (error) {
-            console.error(error);
 
             showMessage(
-                "Не удалось войти. Проверь Email и пароль.",
+                friendlyError(error),
                 "error"
             );
+
+            setLoading(false);
         }
-    });
-}
+    }
+);
 
 
-const registerButton =
-    document.getElementById("register");
+// ============================================================
+// CREATE ACCOUNT
+// ============================================================
 
-if (registerButton) {
-    registerButton.addEventListener("click", async () => {
+registerButton?.addEventListener(
+    "click",
+    async () => {
+
         const email =
-            document.getElementById("email")
-                .value.trim();
+            emailInput?.value.trim();
 
         const password =
-            document.getElementById("password")
-                .value;
+            passwordInput?.value || "";
+
 
         if (!email || !password) {
+
             showMessage(
                 "Введите Email и пароль.",
                 "error"
             );
+
             return;
         }
 
+
         if (password.length < 6) {
+
             showMessage(
                 "Пароль должен содержать минимум 6 символов.",
                 "error"
             );
+
             return;
         }
 
+
+        setLoading(true);
+
+        showMessage(
+            "Создаём аккаунт...",
+            "info"
+        );
+
+
         try {
-            showMessage("Создаём аккаунт...", "info");
 
             const result =
                 await createUserWithEmailAndPassword(
@@ -189,42 +306,56 @@ if (registerButton) {
                     password
                 );
 
-            await goToAI(result.user);
+
+            await goToAI(
+                result.user
+            );
 
         } catch (error) {
-            console.error(error);
 
             showMessage(
-                error.message || "Не удалось создать аккаунт.",
+                friendlyError(error),
                 "error"
             );
+
+            setLoading(false);
         }
-    });
-}
+    }
+);
 
 
-const resetButton =
-    document.getElementById("resetPassword");
+// ============================================================
+// PASSWORD RESET
+// ============================================================
 
-if (resetButton) {
-    resetButton.addEventListener("click", async () => {
+resetButton?.addEventListener(
+    "click",
+    async () => {
+
         const email =
-            document.getElementById("email")
-                .value.trim();
+            emailInput?.value.trim();
+
 
         if (!email) {
+
             showMessage(
                 "Сначала введи Email.",
                 "error"
             );
+
             return;
         }
 
+
+        setLoading(true);
+
         try {
+
             await sendPasswordResetEmail(
                 auth,
                 email
             );
+
 
             showMessage(
                 "Письмо для сброса пароля отправлено.",
@@ -232,41 +363,92 @@ if (resetButton) {
             );
 
         } catch (error) {
-            console.error(error);
 
             showMessage(
-                "Не удалось отправить письмо.",
+                friendlyError(error),
                 "error"
             );
+
+        } finally {
+
+            setLoading(false);
         }
-    });
-}
-
-
-window.TigranAuth = {
-    auth,
-
-    async token() {
-        if (!auth.currentUser) {
-            return null;
-        }
-
-        return await auth.currentUser.getIdToken();
-    },
-
-    async logout() {
-        await signOut(auth);
-
-        window.location.href =
-            "/miniapp/login";
     }
-};
+);
 
 
-onAuthStateChanged(auth, (user) => {
-    console.log(
-        user
-            ? `Firebase user: ${user.uid}`
-            : "Firebase user: signed out"
-    );
-});
+// ============================================================
+// GOOGLE
+// ============================================================
+
+googleButton?.addEventListener(
+    "click",
+    async () => {
+
+        setLoading(true);
+
+        showMessage(
+            "Открываем Google...",
+            "info"
+        );
+
+
+        try {
+
+            const result =
+                await signInWithPopup(
+                    auth,
+                    googleProvider
+                );
+
+
+            await goToAI(
+                result.user
+            );
+
+        } catch (error) {
+
+            showMessage(
+                friendlyError(error),
+                "error"
+            );
+
+            setLoading(false);
+        }
+    }
+);
+
+
+// ============================================================
+// ENTER = LOGIN
+// ============================================================
+
+passwordInput?.addEventListener(
+    "keydown",
+    event => {
+
+        if (event.key === "Enter") {
+
+            event.preventDefault();
+
+            loginButton?.click();
+        }
+    }
+);
+
+
+// ============================================================
+// EXISTING SESSION
+// ============================================================
+
+onAuthStateChanged(
+    auth,
+    user => {
+
+        console.log(
+            user
+                ? "Firebase user authenticated"
+                : "Firebase user signed out"
+        );
+    }
+);
