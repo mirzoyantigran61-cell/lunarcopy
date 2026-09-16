@@ -13,7 +13,7 @@ import {
     ИЗ ТВОЕГО firebase-auth.js
 */
 const firebaseConfig = {
-    apiKey: "ВСТАВЬ_СВОЙ_ТЕКУЩИЙ_API_KEY",
+    apiKey: "AIzaSyDVr7YpqYyleoBNpfl1QQc0IMRQRYAIr8M",
     authDomain: "yourtigranmods-papaji-devffsrc.firebaseapp.com",
     databaseURL: "https://yourtigranmods-papaji-devffsrc-default-rtdb.firebaseio.com",
     projectId: "yourtigranmods-papaji-devffsrc",
