@@ -186,8 +186,8 @@ async function goToAI(user) {
 
 
     window.location.replace(
-        "/miniapp/ai"
-    );
+    "/miniapp"
+);
 }
 
 
